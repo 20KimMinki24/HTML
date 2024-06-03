@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability-based Item System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>확률형 아이템 뽑기</h1>
+        <button class="button" onclick="drawItem()">뽑기</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function drawItem() {
+            const items = [
+                { name: "일반", probability: 35 },
+                { name: "희귀", probability: 27 },
+                { name: "초희귀", probability: 18 },
+                { name: "영웅", probability: 11 },
+                { name: "신화", probability: 7 },
+                { name: "전설", probability: 2 }
+            ];
+
+            const randomNum = Math.random() * 100;
+            let cumulativeProbability = 0;
+
+            for (let i = 0; i < items.length; i++) {
+                cumulativeProbability += items[i].probability;
+                if (randomNum < cumulativeProbability) {
+                    document.getElementById("result").innerText = `당신은 "${items[i].name}" 아이템을 얻었습니다!`;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
