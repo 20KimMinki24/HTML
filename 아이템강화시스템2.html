@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이템 강화 시스템</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .result, .item-level, .durability {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .checkbox-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>아이템 강화 시스템</h1>
+        <div class="item-level" id="item-level">현재 아이템 레벨: 0</div>
+        <div class="durability" id="durability">현재 내구도: 10</div>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="protection" /> 보호제 사용
+            </label>
+        </div>
+        <button class="button" onclick="enhanceItem()">아이템 강화</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        let itemLevel = 0;
+        let durability = 10;
+
+        function enhanceItem() {
+            if (durability <= 0) {
+                document.getElementById("result").innerText = "내구도가 부족하여 더 이상 강화를 진행할 수 없습니다.";
+                return;
+            }
+
+            const enhanceChances = [
+                { level: 0, successRate: 100, destroyRate: 0 },
+                { level: 1, successRate: 90, destroyRate: 10 },
+                { level: 2, successRate: 80, destroyRate: 20 },
+                { level: 3, successRate: 70, destroyRate: 30 },
+                { level: 4, successRate: 60, destroyRate: 40 },
+                { level: 5, successRate: 50, destroyRate: 50 },
+                { level: 6, successRate: 40, destroyRate: 60 },
+                { level: 7, successRate: 30, destroyRate: 70 },
+                { level: 8, successRate: 20, destroyRate: 80 },
+                { level: 9, successRate: 10, destroyRate: 90 }
+            ];
+
+            const protectionUsed = document.getElementById("protection").checked;
+            let currentLevelChance = enhanceChances.find(chance => chance.level === itemLevel);
+
+            if (!currentLevelChance) {
+                document.getElementById("result").innerText = "더 이상 아이템을 강화할 수 없습니다.";
+                return;
+            }
+
+            if (protectionUsed) {
+                currentLevelChance = { ...currentLevelChance, successRate: currentLevelChance.successRate + 20, destroyRate: 0 };
+            }
+
+            const randomNum = Math.random() * 100;
+
+            if (randomNum < currentLevelChance.successRate) {
+                itemLevel++;
+                document.getElementById("result").innerText = "강화 성공!";
+            } else {
+                const destroyChance = Math.random() * 100;
+                if (destroyChance < currentLevelChance.destroyRate) {
+                    itemLevel = 0;
+                    durability--;
+                    document.getElementById("result").innerText = "강화 실패! 아이템이 파괴되었습니다.";
+                } else {
+                    durability--;
+                    document.getElementById("result").innerText = "강화 실패! 내구도가 감소했습니다.";
+                }
+            }
+
+            document.getElementById("item-level").innerText = `현재 아이템 레벨: ${itemLevel}`;
+            document.getElementById("durability").innerText = `현재 내구도: ${durability}`;
+        }
+    </script>
+</body>
+</html>
